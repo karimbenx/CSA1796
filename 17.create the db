@@ -1,0 +1,9 @@
+% Facts representing individuals and their dates of birth
+dob(john, date(1990, 5, 15)).
+dob(susan, date(1985, 11, 20)).
+dob(michael, date(2000, 3, 8)).
+dob(lisa, date(1976, 9, 30)).
+% Add more individuals and their DOBs as needed
+
+% Query to find the date of birth of a specific person
+date_of_birth(Person, Date) :- dob(Person, Date).
