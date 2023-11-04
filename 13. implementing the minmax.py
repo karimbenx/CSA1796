@@ -2,14 +2,14 @@ import math
 
 # Function to find the best move using Minimax algorithm
 def find_best_move(piles):
-    max_depth = 5  
+    max_depth = 5  # Maximum depth to explore the game tree
     best_val = -math.inf
     best_move = -1
 
     for i in range(len(piles)):
         if piles[i] > 0:
             piles[i] -= 1  # Try a move
-            value = minimax(piles, max_depth, False)  
+            value = minimax(piles, max_depth, False)  # Call Minimax for opponent
 
             # Revert the move
             piles[i] += 1
@@ -22,7 +22,7 @@ def find_best_move(piles):
 
 # Minimax algorithm
 def minimax(piles, depth, is_maximizing):
-    if depth == 0 or sum(piles) == 0:  
+    if depth == 0 or sum(piles) == 0:  # If the game ends or max depth is reached
         return 1 if is_maximizing else -1
 
     if is_maximizing:
@@ -30,23 +30,23 @@ def minimax(piles, depth, is_maximizing):
         for i in range(len(piles)):
             if piles[i] > 0:
                 piles[i] -= 1  # Try a move
-                value = minimax(piles, depth - 1, False)  
-                piles[i] += 1  
+                value = minimax(piles, depth - 1, False)  # Call Minimax for opponent
+                piles[i] += 1  # Revert the move
                 best_val = max(best_val, value)
         return best_val
     else:
         best_val = math.inf
         for i in range(len(piles)):
             if piles[i] > 0:
-                piles[i] -= 1  
+                piles[i] -= 1  # Try a move
                 value = minimax(piles, depth - 1, True)  # Call Minimax for opponent
-                piles[i] += 1  
+                piles[i] += 1  # Revert the move
                 best_val = min(best_val, value)
         return best_val
 
-
-game_piles = [3, 4, 5]  
-player_turn = True  
+# Example game of Nim
+game_piles = [3, 4, 5]  # Piles of sizes 3, 4, and 5
+player_turn = True  # True for player 1, False for player 2
 
 while sum(game_piles) > 0:
     print("Current piles:", game_piles)
