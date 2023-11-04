@@ -1,27 +1,71 @@
-board = [[" " for _ in range(3)] for _ in range(3)]
+import math
 
-def winner(b, p): 
-    return any(p*3 in r for r in b + list(zip(*b)) + [b[i][i] for i in range(3)])
+# Function to find the best move using Minimax algorithm
+def find_best_move(piles):
+    max_depth = 5  
+    best_val = -math.inf
+    best_move = -1
 
-def minimax(b, d, m):
-    s = 1 if winner(b, 'X') else (-1 if winner(b, 'O') else 0)
-    if s != 0 or not any(' ' in r for r in b): return s
+    for i in range(len(piles)):
+        if piles[i] > 0:
+            piles[i] -= 1  # Try a move
+            value = minimax(piles, max_depth, False)  
 
-    v, f = (max, -float('inf')) if m else (min, float('inf'))
-    for i in range(3):
-        for j in range(3):
-            if b[i][j] == " ":
-                b[i][j] = 'X' if m else 'O'
-                f = v(f, minimax(b, d + 1, not m))
-                b[i][j] = " "
-    return f
+            # Revert the move
+            piles[i] += 1
 
-while not (winner(board, 'X') or winner(board, 'O') or not any(' ' in r for r in board)):
-    if any(' ' in r for r in board): 
-        bm = max(((i, j) for i in range(3) for j in range(3) if board[i][j] == " "), key=lambda x: minimax([r[:] for r in board], 0, False))
-        board[bm[0]][bm[1]] = 'X'
+            if value > best_val:
+                best_val = value
+                best_move = i
 
-print("\n".join(" | ".join(row) for row in board))
-if winner(board, 'X'): print("AI wins!")
-elif winner(board, 'O'): print("Player wins!")
-elif not any(' ' in row for row in board): print("It's a draw!")
+    return best_move
+
+# Minimax algorithm
+def minimax(piles, depth, is_maximizing):
+    if depth == 0 or sum(piles) == 0:  
+        return 1 if is_maximizing else -1
+
+    if is_maximizing:
+        best_val = -math.inf
+        for i in range(len(piles)):
+            if piles[i] > 0:
+                piles[i] -= 1  # Try a move
+                value = minimax(piles, depth - 1, False)  
+                piles[i] += 1  
+                best_val = max(best_val, value)
+        return best_val
+    else:
+        best_val = math.inf
+        for i in range(len(piles)):
+            if piles[i] > 0:
+                piles[i] -= 1  
+                value = minimax(piles, depth - 1, True)  # Call Minimax for opponent
+                piles[i] += 1  
+                best_val = min(best_val, value)
+        return best_val
+
+
+game_piles = [3, 4, 5]  
+player_turn = True  
+
+while sum(game_piles) > 0:
+    print("Current piles:", game_piles)
+    if player_turn:
+        pile_choice = find_best_move(game_piles)
+        print("Player 1 takes", game_piles[pile_choice], "from pile", pile_choice + 1)
+    else:
+        pile = int(input("Player 2: Enter pile number: ")) - 1
+        stones = int(input("Enter stones to remove: "))
+        while stones > game_piles[pile]:
+            stones = int(input("Invalid input. Enter stones to remove: "))
+        game_piles[pile] -= stones
+        print("Player 2 takes", stones, "from pile", pile + 1)
+
+    player_turn = not player_turn
+
+if player_turn:
+    print("Player 2 wins!")
+else:
+    print("Player 1 wins!")
+
+  
