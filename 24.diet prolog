@@ -1,0 +1,15 @@
+has_disease(john, diabetes).
+has_disease(jim, hypertension).
+has_disease(mary, cholesterol).
+has_disease(susan, none).
+
+% Facts about suggested diets for diseases
+diet_suggestion(diabetes, 'Low-carb diet. Include more vegetables and lean protein. Avoid sugary foods.').
+diet_suggestion(hypertension, 'Low-sodium diet. Limit processed foods. Include fruits, vegetables, and lean proteins.').
+diet_suggestion(cholesterol, 'Low-cholesterol diet. Include more fruits, vegetables, and whole grains. Limit saturated fats.').
+diet_suggestion(none, 'No specific diet recommendation. Maintain a balanced diet with a variety of foods.').
+
+% Rule to suggest a diet based on a given disease
+suggest_diet(Person, Disease, Diet) :-
+    has_disease(Person, Disease),
+    diet_suggestion(Disease, Diet).

@@ -1,0 +1,21 @@
+% Facts about individuals
+male(john).
+male(bob).
+male(jim).
+female(mary).
+female(susan).
+female(lisa).
+
+% Parent relationships
+parent(john, bob).
+parent(john, jim).
+parent(mary, bob).
+parent(mary, jim).
+parent(bob, lisa).
+parent(susan, lisa).
+
+% Rules to define relationships
+father(X, Y) :- male(X), parent(X, Y).
+mother(X, Y) :- female(X), parent(X, Y).
+sibling(X, Y) :- parent(Z, X), parent(Z, Y), X \= Y.
+
